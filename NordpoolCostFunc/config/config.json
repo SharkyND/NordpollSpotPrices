@@ -1,0 +1,25 @@
+{
+    "systemConfig":
+    {
+        "logFile": "app.log"
+    },
+    
+    "iotTicketConfig":
+    {
+        "baseUrl": "https://my.iot-ticket.com/api/v1/",
+        "username": "IOT_TICKET_USERNAME_HERE",
+        "password": "IOT_TICKET_PASSWORD_HERE",
+        "deviceId": "IOT_TICKET_DEVICE_ID_HERE",
+        "mappingFiles": ["mapping_files/04022020_MissingPoints.csv", "mapping_files/EnergyMeters_Sch.csv", "mapping_files/Energy_Meter_Sch2.csv","mapping_files/AHU_Mapped_Sch.csv", "mapping_files/RoomTemperatureMapped_Sch.csv",
+            "mapping_files/ElectricMeterMapped_Sch.csv", "mapping_files/HT_MT_CoolingPower_Meters_Mapped.csv", "mapping_files/ElectricMeterMapped_Sch_real_energy.csv",
+            "mapping_files/ElectricMeterMapped_Sch_new_points.csv", "mapping_files/09032020_2-NewChiller_Mapped_LIDL_mod.csv", "mapping_files/09032020-NewPoint_LIDL_mod.csv", "mapping_files/17022020-NewAHU_LIDL_mod.csv"],
+        "readIntervalSec": 600
+    },
+	
+	"schneiderConfig":
+    {
+        "baseUrl": "https://smartconnector.evalvomo.fi/sbo28",
+        "username": "SCHNEIDER_USERNAME_HERE",
+        "password": "SCHNEIDER_PASSWORD_HERE"
+    }
+}
