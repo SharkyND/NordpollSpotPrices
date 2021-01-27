@@ -135,7 +135,7 @@ def main(mytimer: func.TimerRequest) -> None:
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
 
     logging.info("Call the NordPool Class")
-    dataCollections=Nordpool(2021)
+    dataCollections=Nordpool(2020)
     
     logging.info("Collecting data for IoT Ticket")
 
@@ -144,7 +144,6 @@ def main(mytimer: func.TimerRequest) -> None:
     for index, row in (dataCollections.dataCollection.iterrows()):
         path="/"
         name="NordpoolSpotPrice"
-        logging.info(row)
         value=row["Value"]
         timeMsUTC=row["Time"]
         dataToSend.append(get_iot_datanode(name, path,value, timeMsUTC))

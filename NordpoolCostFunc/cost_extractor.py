@@ -46,9 +46,9 @@ class Nordpool():
     def dateParser(self,datetimeFromData):
         return datetime.strptime(datetimeFromData, '%d-%m-%Y %H:%M:%S')
     
-    def datetoEpochUTC(self,datetime,timeZone):
-        time=datetime.replace(tzinfo=timezone(timeZone))
-        return round(time.astimezone(tz.gettz('UTC')).timestamp())
+    def datetoEpochUTC(self,datetimeUNIT,timeZone):
+        time=timezone(timeZone).localize(datetimeUNIT)
+        return int(time.astimezone(tz.gettz('UTC')).timestamp())*1000
     
     def insertDataInPandas(self,series,timestamp,value):
         Object={'Time':[timestamp],'Value':[value]}
@@ -64,8 +64,9 @@ class Nordpool():
         #now get the date store in the blob
         timeFromBlob=(self.callDateFromBlob())
         timeFromBlob=self.dateParser(timeFromBlob[0])
+        logging.info("Stuffing Pandas")
 
-        for count,row in enumerate(soup.find_all('tr')[3:]):
+        for count,row in enumerate(soup.find_all('tr')[3:3000]):
             elements=row.find_all("td")
             #Date
             date=elements[0].text
@@ -79,7 +80,7 @@ class Nordpool():
             if (properdate>timeFromBlob):
                 self.dataCollection=self.insertDataInPandas(self.dataCollection,self.datetoEpochUTC(properdate,"Europe/Helsinki"),elements[6].text.replace(",","."))
             
-            if(count==len(soup.find_all('tr')[3:])-1):
+            if(count==len(soup.find_all('tr')[3:3000])-1):
                 self.lastDateOnDataBase=date+" "+time
         logging.info("Data Collected for {} many points".format(len(self.dataCollection["Time"])))
         #return dataCollection

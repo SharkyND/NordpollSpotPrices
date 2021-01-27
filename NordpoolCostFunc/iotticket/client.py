@@ -239,7 +239,6 @@ class Client(object):
 
         if len(dv) > 0:
             try:
-                logging.info("Sending the data of {}".format(dv[-1]))
                 j = json.dumps(dv)
                 data = j.encode("utf8")
                 pathUrl = self.baseUrl + self.writedataresourceformat.format(deviceId)
