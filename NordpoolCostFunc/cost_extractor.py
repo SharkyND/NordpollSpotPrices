@@ -38,6 +38,7 @@ class Nordpool():
         #self._isNumber(self.yearToCall)
         logging.info("Getting data")
         html_text = requests.get(self.URL).text
+        logging.info("Request Done")
         soup = BeautifulSoup(html_text, 'html.parser')
         logging.info("Done Getting Data")
         
@@ -60,29 +61,39 @@ class Nordpool():
     def gettingData(self):
         soup=self.gettingHTML()
         #Collecting data
-        self.dataCollection=self.initiazPandas()
+        #self.dataCollection=self.initiazPandas()
+        #Trying the list method
+        self.dataCollection=[]
         #now get the date store in the blob
-        timeFromBlob=(self.callDateFromBlob())
-        timeFromBlob=self.dateParser(timeFromBlob[0])
+        timeFromBlob_text=(self.callDateFromBlob())
+        timeFromBlob=self.dateParser(timeFromBlob_text[0])
         logging.info("Stuffing Pandas")
 
-        for count,row in enumerate(soup.find_all('tr')[3:3000]):
+        self.dateFinderIndicator=False
+
+        for count,row in enumerate(soup.find_all('tr')[3:1000]):
             elements=row.find_all("td")
             #Date
             date=elements[0].text
             #Time
             time=elements[1].text.split("-")[0][:2]+":00:00"
             #datetime
-            properdate=self.dateParser(date+" "+time)
+            #properdate=self.dateParser(date+" "+time)
+            combinedDate=date+" "+time
+            if combinedDate==timeFromBlob_text[0]:
+                self.dateFinderIndicator=True
             
-            
-
-            if (properdate>timeFromBlob):
-                self.dataCollection=self.insertDataInPandas(self.dataCollection,self.datetoEpochUTC(properdate,"Europe/Helsinki"),elements[6].text.replace(",","."))
-            
-            if(count==len(soup.find_all('tr')[3:3000])-1):
+            #if (properdate>timeFromBlob):
+            if(self.dateFinderIndicator==True):
+                try:
+                    properdate=self.dateParser(date+" "+time)
+                    #self.dataCollection=self.insertDataInPandas(self.dataCollection,self.datetoEpochUTC(properdate,"Europe/Helsinki"),elements[6].text.replace(",","."))
+                    self.dataCollection.append([self.datetoEpochUTC(properdate,"Europe/Helsinki"),float(elements[6].text.replace(",","."))])
+                except:
+                    logging.info("Problem occured while loading data")
+            if(count==len(soup.find_all('tr')[3:1000])-1):
                 self.lastDateOnDataBase=date+" "+time
-        logging.info("Data Collected for {} many points".format(len(self.dataCollection["Time"])))
+        logging.info("Data Collected for {} many points".format(len(self.dataCollection)))
         #return dataCollection
     
     def changeDate(self):

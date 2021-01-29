@@ -141,11 +141,16 @@ def main(mytimer: func.TimerRequest) -> None:
 
     dataToSend=[]
 
-    for index, row in (dataCollections.dataCollection.iterrows()):
+    #for index, row in (dataCollections.dataCollection.iterrows()):
+    for row in (dataCollections.dataCollection):
         path="/"
         name="NordpoolSpotPrice"
-        value=row["Value"]
-        timeMsUTC=row["Time"]
+        #value=row["Value"]
+        value=row[1]
+        if not (type(value)==int or type(value)==float):
+            continue
+        #timeMsUTC=row["Time"]
+        timeMsUTC=row[0]
         dataToSend.append(get_iot_datanode(name, path,value, timeMsUTC))
 
     #Send the data to IoT Ticket:
